@@ -1,0 +1,2 @@
+Plan for chat program using C, where two terminal windows should be able to talk with eachother:
+
