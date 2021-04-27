@@ -11,25 +11,18 @@ windows to chat with each other */
 
 int main(void) {
 
- //Create socket
- //int fd = socket( ... )
 	
 	int server_fd;
 	//struct sockaddr_in address;
 
-	//Create the socket
-	if((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
-			perror("Failure to create socket.");
-			exit(EXIT_FAILURE);
-			}
+	//dsdseate the socket
+	if((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+		perror("Failure to create socket.");
+		exit(EXIT_FAILURE);
+	}
 			
 	
 	printf("Created server with fd: %d\n", server_fd);
-
-	//Bind the server to specific port
-	 
-
-//Socket, bind, listen, accept:	
 
 
 

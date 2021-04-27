@@ -3,6 +3,8 @@
 CC = gcc
 FLAGS = -g -std=gnu11 -Wall -Werror -Wextra -Wpedantic
 
+all: client server
+
 client: client.o
 	$(CC) $(FLAGS) client.o -o client
 
@@ -14,4 +16,3 @@ server: server.o
 
 server.o: server.c
 	$(CC) $(FLAGS) -c server.c
-
