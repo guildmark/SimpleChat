@@ -8,3 +8,10 @@ client: client.o
 
 client.o: client.c
 	$(CC) $(FLAGS) -c client.c
+
+server: server.o
+	$(CC) $(FLAGS) server.o -o server
+
+server.o: server.c
+	$(CC) $(FLAGS) -c server.c
+
