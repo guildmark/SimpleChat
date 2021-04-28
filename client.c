@@ -22,7 +22,7 @@ int main(void) {
 	}
 			
 	
-	printf("Created server with fd: %d\n", server_fd);
+	printf("Created socket with fd: %d\n", server_fd);
 
 
 
