@@ -1,18 +1,21 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <sys/socket.h> //For socket
 #include <netinet/in.h>
-
+#include <unistd.h>
 #define PORT 8080
 
 int main(void) {
 
 
-    int socket_fd, new_socket; //Socket descriptor
+    int socket_fd, new_socket, valread; //Socket descriptor
     //int setsockopt; //Used for mainpulating options for the socket
     //int opt = 1;
     struct sockaddr_in address; //Socket address
     int addlen = sizeof(address);
+    char buffer[1024];
+    char* testMessage = "Test";
 
     //Create socket
     if((socket_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
@@ -53,6 +56,11 @@ int main(void) {
         perror("Failure in accepting connection.");
         exit(EXIT_FAILURE);
     }
+    
+    valread = read(socket_fd , buffer, 1024);
+    printf("%s\n", buffer );
+    //send(socket_fd , testMessage , strlen(testMessage) , 0 );
+    //printf("Hello message sent\n");
 
     return 0;
 }

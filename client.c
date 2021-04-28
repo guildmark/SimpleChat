@@ -1,10 +1,12 @@
-/*A program that acts as a simple chat, where the goal is for two terminal
-windows to chat with each other */
+/*A client program that acts as a simple chat, where the goal is for two terminal
+windows to chat with each other with the possibility of using two different computers*/
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/socket.h> //For socket
 #include <netinet/in.h>
+#include <arpa/inet.h>
 
 #define HOSTNAME "guildmark"
 #define PORT 8080
@@ -12,18 +14,36 @@ windows to chat with each other */
 int main(void) {
 
 	
-	int server_fd;
-	//struct sockaddr_in address;
+	int socket_fd = 0, valread;
+	struct sockaddr_in address;
+	int addlen = sizeof(address);
+	char buffer[1024];
+	char* testMessage = "Test";
 
-	//dsdseate the socket
-	if((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-		perror("Failure to create socket.");
+	//create the socket
+	if((socket_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+		perror("Failure to create socket");
 		exit(EXIT_FAILURE);
 	}
-			
-	
-	printf("Created socket with fd: %d\n", server_fd);
 
+	address.sin_family = AF_INET;
+	address.sin_port = htons(PORT);
+	
+	//Convert IP to binary
+	if(inet_pton(AF_INET, "127.0.0.1", &address.sin_addr)<=0) {
+		perror("Invalid address");
+		exit(EXIT_FAILURE);
+	}
+
+	//Connect to server int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+	if(connect(socket_fd, (struct sockaddr *)&address, addlen) < 0) {
+		perror("Error connecting to server");
+		exit(EXIT_FAILURE);
+	}
+
+	//Send message to server
+	send(socket_fd, testMessage, strlen(testMessage), 0);
+	printf("Test message sent to server.\n");
 
 
 	return 0;
