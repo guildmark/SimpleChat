@@ -6,10 +6,11 @@
 #include <unistd.h>
 #define PORT 8080
 
-int main(void) {
+int main(int argc, const char *argv[]) {
 
 
-    int socket_fd, new_socket, valread; //Socket descriptor
+    int socket_fd, new_socket, readbytes; //Socket descriptor
+    int opt = 0;
     //int setsockopt; //Used for mainpulating options for the socket
     //int opt = 1;
     struct sockaddr_in address; //Socket address
@@ -46,20 +47,21 @@ int main(void) {
     //Listen (socketfd, backlog)
     printf("Listening to port %d...\n", PORT);
 
-    if(listen(socket_fd, 3) < 0) {
+    if(listen(socket_fd, 3) == -1) {
         perror("Error listening to port");
         exit(EXIT_FAILURE);
     }
 
     //Accept accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
-    if((new_socket = accept(socket_fd, (struct sockaddr *) &address, (socklen_t *)&addlen)) < 0) {
+    if((new_socket = accept(socket_fd, (struct sockaddr *) &address, (socklen_t *)&addlen)) == -1) {
         perror("Failure in accepting connection.");
         exit(EXIT_FAILURE);
     }
     
-    valread = read(socket_fd , buffer, 1024);
-    printf("%s\n", buffer );
-    //send(socket_fd , testMessage , strlen(testMessage) , 0 );
+    readbytes = read( new_socket, buffer, 1024);
+    printf("Message received: ");
+    printf("%s\n", buffer);
+    //send(socket_fd, testMessage, strlen(testMessage) , 0 );
     //printf("Hello message sent\n");
 
     return 0;

@@ -11,7 +11,7 @@ windows to chat with each other with the possibility of using two different comp
 #define HOSTNAME "guildmark"
 #define PORT 8080
 
-int main(void) {
+int main(int argc, const char *argv[]) {
 
 	
 	int socket_fd = 0, valread;
@@ -35,15 +35,22 @@ int main(void) {
 		exit(EXIT_FAILURE);
 	}
 
+	printf("Connecting to server on port %d..\n", PORT);
 	//Connect to server int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 	if(connect(socket_fd, (struct sockaddr *)&address, addlen) < 0) {
 		perror("Error connecting to server");
 		exit(EXIT_FAILURE);
 	}
 
+	printf("Connected to server.\n");
+
+	//Get the input from user
+	while(fgets(buffer, 1024, stdin) != NULL) {
+		send(socket_fd, buffer, strlen(buffer), 0);
+		printf("Sending message: %s..\n", testMessage);
+	}
+
 	//Send message to server
-	send(socket_fd, testMessage, strlen(testMessage), 0);
-	printf("Test message sent to server.\n");
 
 
 	return 0;
