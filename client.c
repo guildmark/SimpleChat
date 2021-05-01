@@ -47,7 +47,7 @@ int main(int argc, const char *argv[]) {
 	//Get the input from user
 	while(fgets(buffer, 1024, stdin) != NULL) {
 		send(socket_fd, buffer, strlen(buffer), 0);
-		printf("Sending message: %s..\n", testMessage);
+		//printf("Sending message: %s..\n", testMessage);
 	}
 
 	//Send message to server

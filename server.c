@@ -15,7 +15,8 @@ int main(int argc, const char *argv[]) {
     //int opt = 1;
     struct sockaddr_in address; //Socket address
     int addlen = sizeof(address);
-    char buffer[1024];
+    char *buffer = malloc(1024);
+    char temp[1024];
     char* testMessage = "Test";
 
     //Create socket
@@ -57,10 +58,17 @@ int main(int argc, const char *argv[]) {
         perror("Failure in accepting connection.");
         exit(EXIT_FAILURE);
     }
-    
-    readbytes = read( new_socket, buffer, 1024);
+
+  
+
+    //Read from buffer until end of file
+    while(read(new_socket, buffer, 1024) != 0) {
+        printf("%s\n", buffer);
+        
+        //Clear buffer after printing message
+        memset(buffer, 0, 1024);
+    }
     printf("Message received: ");
-    printf("%s\n", buffer);
     //send(socket_fd, testMessage, strlen(testMessage) , 0 );
     //printf("Hello message sent\n");
 
