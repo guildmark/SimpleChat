@@ -6,18 +6,17 @@
 #include <unistd.h>
 #define PORT 8080
 
-int main(int argc, const char *argv[]) {
+int main(void) {
 
 
-    int socket_fd, new_socket, readbytes; //Socket descriptor
-    int opt = 0;
+    int socket_fd, new_socket; //Socket descriptor
+    //int opt = 0;
     //int setsockopt; //Used for mainpulating options for the socket
     //int opt = 1;
     struct sockaddr_in address; //Socket address
     int addlen = sizeof(address);
     char *buffer = malloc(1024);
-    char temp[1024];
-    char* testMessage = "Test";
+    //char* testMessage = "Test";
 
     //Create socket
     if((socket_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
@@ -71,6 +70,8 @@ int main(int argc, const char *argv[]) {
     printf("Message received: ");
     //send(socket_fd, testMessage, strlen(testMessage) , 0 );
     //printf("Hello message sent\n");
+    
 
+    free(buffer);
     return 0;
 }

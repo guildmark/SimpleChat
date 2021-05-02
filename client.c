@@ -10,15 +10,28 @@ windows to chat with each other with the possibility of using two different comp
 
 #define HOSTNAME "guildmark"
 #define PORT 8080
+#define MAX_USER 30
 
-int main(int argc, const char *argv[]) {
+const char *getUser() {
+	char *user = malloc(MAX_USER);
 
+	printf("Enter username (max 30 characters): ");
+	scanf("%s", user);
+
+	printf("Welcome to SimpleChat [%s]!\n", user);
 	
-	int socket_fd = 0, valread;
+	return user;
+}
+
+void connectToServer() {
+
+	//Get username
+	const char *user = getUser();
+
+	int socket_fd = 0;
 	struct sockaddr_in address;
 	int addlen = sizeof(address);
 	char buffer[1024];
-	char* testMessage = "Test";
 
 	//create the socket
 	if((socket_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -50,7 +63,15 @@ int main(int argc, const char *argv[]) {
 		//printf("Sending message: %s..\n", testMessage);
 	}
 
-	//Send message to server
+}
+
+int main(void) {
+
+
+
+	//connect to server
+	connectToServer();
+
 
 
 	return 0;
