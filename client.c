@@ -11,8 +11,11 @@ windows to chat with each other with the possibility of using two different comp
 #define HOSTNAME "guildmark"
 #define PORT 8080
 #define MAX_USER 30
+#define MAX_BUFFER 1024
 
+/*
 const char *getUser() {
+
 	char *user = malloc(MAX_USER);
 
 	printf("Enter username (max 30 characters): ");
@@ -22,35 +25,40 @@ const char *getUser() {
 	
 	return user;
 }
+*/
 
-void connectToServer() {
+void connectToServer(char *buffer, char *user, struct sockaddr_in servAddress) {
 
 	//Get username
-	const char *user = getUser();
 
-	int socket_fd = 0;
-	struct sockaddr_in address;
-	int addlen = sizeof(address);
-	char buffer[1024];
+
+	int clientSocket = 0;
+	int addlen = sizeof(servAddress);
+	
+	printf("Enter username (max 30 characters): ");
+	scanf("%s", user);
+
+	printf("Welcome to SimpleChat [%s]!\n", user);
 
 	//create the socket
-	if((socket_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+	if((clientSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		perror("Failure to create socket");
 		exit(EXIT_FAILURE);
 	}
 
-	address.sin_family = AF_INET;
-	address.sin_port = htons(PORT);
+	servAddress.sin_family = AF_INET;
+	servAddress.sin_port = htons(PORT);
+	servAddress.sin_addr.s_addr = inet_addr("127.0.0.1");
 	
 	//Convert IP to binary
-	if(inet_pton(AF_INET, "127.0.0.1", &address.sin_addr)<=0) {
+	if(inet_pton(AF_INET, "127.0.0.1", &servAddress.sin_addr)<=0) {
 		perror("Invalid address");
 		exit(EXIT_FAILURE);
 	}
 
 	printf("Connecting to server on port %d..\n", PORT);
 	//Connect to server int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
-	if(connect(socket_fd, (struct sockaddr *)&address, addlen) < 0) {
+	if(connect(clientSocket, (struct sockaddr *)&servAddress, addlen) < 0) {
 		perror("Error connecting to server");
 		exit(EXIT_FAILURE);
 	}
@@ -59,18 +67,25 @@ void connectToServer() {
 
 	//Get the input from user
 	while(fgets(buffer, 1024, stdin) != NULL) {
-		send(socket_fd, buffer, strlen(buffer), 0);
+		send(clientSocket, buffer, strlen(buffer), 0);
 		//printf("Sending message: %s..\n", testMessage);
+
+		//Check if the client will exit the server (dont need cus fgets checks for NULL?)
+	
 	}
+
+	//free(user);
 
 }
 
 int main(void) {
 
-
-
+	struct sockaddr_in servAddress;
+	char buffer[MAX_BUFFER];
+	char user[MAX_USER];
+	
 	//connect to server
-	connectToServer();
+	connectToServer(buffer, user, servAddress);
 
 
 

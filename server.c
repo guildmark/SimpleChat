@@ -4,29 +4,53 @@
 #include <sys/socket.h> //For socket
 #include <netinet/in.h>
 #include <unistd.h>
+#include <pthread.h> //For threads
+
 #define PORT 8080
+#define CLIENTS 5
+
+
+void *connectToClient();
 
 int main(void) {
 
 
-    int socket_fd, new_socket; //Socket descriptor
+    pthread_t thread_id;
+
+    //Create thread, exit with message on error
+    if(pthread_create(&thread_id, NULL, connectToClient, NULL) != 0) {
+        perror("Error creating thread");
+        exit(EXIT_FAILURE);
+    }
+
+    pthread_join(thread_id, NULL);
+    //connectToClient();
+
+
+
+    return 0;
+}
+
+void *connectToClient() {
+    
+    int serverSocket, new_socket; //Socket descriptor
     //int opt = 0;
     //int setsockopt; //Used for mainpulating options for the socket
     //int opt = 1;
     struct sockaddr_in address; //Socket address
     int addlen = sizeof(address);
     char *buffer = malloc(1024);
-    //char* testMessage = "Test";
+
 
     //Create socket
-    if((socket_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+    if((serverSocket = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
         perror("Failure to create socket.");
         exit(EXIT_FAILURE);
     }
 
     /*
     //Setsockopt, i
-    if(setsockopt(socket_fd, SOL_SOCKET, SO_REUSADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
+    if(setsockopt(serverSocket, SOL_SOCKET, SO_REUSADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
         perror("Failure in using setsockopt.");
         exit(EXIT_FAILURE);
     }
@@ -39,7 +63,7 @@ int main(void) {
 
     
     //Bind the socket to specific port
-    if(bind(socket_fd, (struct sockaddr *) &address, sizeof(address)) < 0){
+    if(bind(serverSocket, (struct sockaddr *) &address, sizeof(address)) < 0){
         perror("Failure to bind socket.");
         exit(EXIT_FAILURE);
     }
@@ -47,31 +71,35 @@ int main(void) {
     //Listen (socketfd, backlog)
     printf("Listening to port %d...\n", PORT);
 
-    if(listen(socket_fd, 3) == -1) {
+    if(listen(serverSocket, 3) == -1) {
         perror("Error listening to port");
         exit(EXIT_FAILURE);
     }
 
     //Accept accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
-    if((new_socket = accept(socket_fd, (struct sockaddr *) &address, (socklen_t *)&addlen)) == -1) {
+    if((new_socket = accept(serverSocket, (struct sockaddr *) &address, (socklen_t *)&addlen)) == -1) {
         perror("Failure in accepting connection.");
         exit(EXIT_FAILURE);
     }
+
+    //.printf("Accepted connection request from: %");
 
   
 
     //Read from buffer until end of file
     while(read(new_socket, buffer, 1024) != 0) {
+
         printf("%s\n", buffer);
         
         //Clear buffer after printing message
         memset(buffer, 0, 1024);
     }
-    printf("Message received: ");
-    //send(socket_fd, testMessage, strlen(testMessage) , 0 );
+    
+    //send(serverSocket, testMessage, strlen(testMessage) , 0 );
     //printf("Hello message sent\n");
     
 
     free(buffer);
-    return 0;
+
+    return NULL;
 }

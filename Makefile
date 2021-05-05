@@ -1,7 +1,8 @@
 # Makefile for compiling SimpleChat into executable program
 #
+##-Wall -Wextra -Wpedantic
 CC = gcc
-FLAGS = -g -std=gnu11 -Wall -Wextra -Wpedantic
+FLAGS = -g -std=gnu11 -pthread
 
 all: client server
 
