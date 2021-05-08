@@ -7,7 +7,8 @@
 #include <pthread.h> //For threads
 
 #define PORT 8080
-#define CLIENTS 5
+#define MAX_CLIENTS 5
+#define BUFFER_SIZE 1024
 
 
 void *connectToClient();
@@ -19,7 +20,8 @@ int main(void) {
 
     //Create thread, exit with message on error
     if(pthread_create(&thread_id, NULL, connectToClient, NULL) != 0) {
-        perror("Error creating thread");
+        //pthread_create doesn't change errno (?)
+        printf("Error creating thread!\n");
         exit(EXIT_FAILURE);
     }
 
@@ -76,16 +78,15 @@ void *connectToClient() {
         exit(EXIT_FAILURE);
     }
 
-    //Accept accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+
+    //Accept connection from up to max amount of clients, do while ?
+    
+      
     if((new_socket = accept(serverSocket, (struct sockaddr *) &address, (socklen_t *)&addlen)) == -1) {
         perror("Failure in accepting connection.");
         exit(EXIT_FAILURE);
     }
-
-    //.printf("Accepted connection request from: %");
-
   
-
     //Read from buffer until end of file
     while(read(new_socket, buffer, 1024) != 0) {
 
