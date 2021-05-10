@@ -11,7 +11,7 @@
 #define BUFFER_SIZE 1024
 
 
-void *connectToClient();
+void *connectClient();
 
 int main(void) {
 
@@ -19,7 +19,7 @@ int main(void) {
     pthread_t thread_id;
 
     //Create thread, exit with message on error
-    if(pthread_create(&thread_id, NULL, connectToClient, NULL) != 0) {
+    if(pthread_create(&thread_id, NULL, connectClient, NULL) != 0) {
         //pthread_create doesn't change errno (?)
         printf("Error creating thread!\n");
         exit(EXIT_FAILURE);
@@ -33,7 +33,7 @@ int main(void) {
     return 0;
 }
 
-void *connectToClient() {
+void *connectClient() {
     
     int serverSocket, new_socket; //Socket descriptor
     //int opt = 0;
@@ -81,7 +81,6 @@ void *connectToClient() {
 
     //Accept connection from up to max amount of clients, do while ?
     
-      
     if((new_socket = accept(serverSocket, (struct sockaddr *) &address, (socklen_t *)&addlen)) == -1) {
         perror("Failure in accepting connection.");
         exit(EXIT_FAILURE);
