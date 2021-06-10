@@ -45,12 +45,6 @@ void connectToServer(char *buffer, char *user, struct sockaddr_in servAddress) {
 	servAddress.sin_family = AF_INET;
 	servAddress.sin_port = htons(PORT);
 	servAddress.sin_addr.s_addr = inet_addr("127.0.0.1");
-	
-	//Convert IP to binary
-	if(inet_pton(AF_INET, "127.0.0.1", &servAddress.sin_addr)<=0) {
-		perror("Invalid address");
-		exit(EXIT_FAILURE);
-	}
 
 	printf("Connecting to server on port %d..\n", PORT);
 
@@ -77,7 +71,6 @@ void connectToServer(char *buffer, char *user, struct sockaddr_in servAddress) {
 		if (len > 0 && buffer[len-1] == '\n') {
 			buffer[--len] = '\0';
 		}
-
 
 		//Check if user wants to exit
 		if(strcmp("quit", buffer) == 0) {
