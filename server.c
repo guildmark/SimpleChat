@@ -13,12 +13,13 @@
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
-void *clientHandler();
+void *getMessage(void * socket);
 
 int main(void) {
 
+    pthread_t thread_id;
     /*
-    pthread_t thread_id[MAX_CLIENTS];
+
 
     for(int i = 0; i < MAX_CLIENTS; i++) {
         if(pthread_create(&thread_id[i], NULL, connectClient, NULL) != 0) {
@@ -33,13 +34,14 @@ int main(void) {
     }
     */
     
-    int serverSocket, new_socket; //Socket descriptor
+    int serverSocket, newSocket; //Socket descriptor
     //int opt = 0;
     //int setsockopt; //Used for mainpulating options for the socket
     //int opt = 1;
     struct sockaddr_in address; //Socket address
     int addlen = sizeof(address);
-    char *buffer = malloc(1024);
+    char buffer[1024];
+
 
 
     //Create socket
@@ -71,42 +73,51 @@ int main(void) {
     //Listen (socketfd, backlog)
     printf("Listening to port %d...\n", PORT);
 
-    if(listen(serverSocket, 5) == -1) {
+    if(listen(serverSocket, MAX_CLIENTS) == -1) {
         perror("Error listening to port");
         exit(EXIT_FAILURE);
     }
 
     //Accept connection from up to max amount of clients, do while ?
     
-    if((new_socket = accept(serverSocket, (struct sockaddr *) &address, (socklen_t *)&addlen)) == -1) {
+    if((newSocket = accept(serverSocket, (struct sockaddr *) &address, (socklen_t *)&addlen)) == -1) {
         perror("Failure in accepting connection.");
         exit(EXIT_FAILURE);
     }
 
-
-    //Read from buffer until end of file
-    while(read(new_socket, buffer, 1024) != 0) {
-
+    //fork test
+    
+    while(read(newSocket, buffer, 1024) != 0) {
+            
         printf("%s\n", buffer);
-        
-        //Clear buffer after printing message
         memset(buffer, 0, 1024);
     }
 
 
-    
+    //Read from buffer until end of file
+    //pthread_create(&thread_id, 0, getMessage, (void *) newSocket);
     //send(serverSocket, testMessage, strlen(testMessage) , 0 );
     //printf("Hello message sent\n");
     
 
-    free(buffer);
+    //free(buffer);
+
+    close(serverSocket);
 
 
     return 0;
 }
 
-void *clientHandler() {
-    
+void *getMessage(void * socket) {
    
-    return NULL;
+    char buffer[1024];
+    int socket_fd;
+    //socket_fd = (int) socket;
+    
+    while(read(socket_fd, buffer, 1024) != 0) {
+        
+        printf("%s\n", buffer);
+        memset(buffer, 0, 1024);
+    }
+
 }

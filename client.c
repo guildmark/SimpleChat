@@ -30,11 +30,8 @@ const char *getUser() {
 void connectToServer(char *buffer, char *user, struct sockaddr_in servAddress) {
 
 	//Get username
-
-
 	int clientSocket = 0;
 	int addlen = sizeof(servAddress);
-
 
 	//create the socket
 	if((clientSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -56,11 +53,12 @@ void connectToServer(char *buffer, char *user, struct sockaddr_in servAddress) {
 
 	printf("Connected to server.\n");
 
-		
+	/*	
 	printf("Enter username (max 30 characters): ");
 	scanf("%s", user);
+	*/
 
-	printf("Welcome to SimpleChat [%s]!\n ", user);
+	//printf("Welcome to SimpleChat [%s]!\n ", user);
 	printf("Type a message and it will be sent to the server ('quit' to exit the chat).\n");
 
 	//Get the input from user
